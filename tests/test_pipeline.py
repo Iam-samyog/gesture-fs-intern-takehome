@@ -95,3 +95,19 @@ class TestAnswerGeneration:
         assert "2,500" in answer or "2500" in answer or "starter" in answer, (
             "Answer should address the pricing question"
         )
+
+
+# ────────────────────────────────
+# Edge cases & bonus handling
+# ────────────────────────────────
+class TestEdgeCases:
+    def test_empty_question(self, vector_store, llm):
+        result = ask_question(vector_store, llm, "")
+        assert isinstance(result, dict)
+        assert result["sources"] == []
+        assert "don't have enough information" in result["answer"].lower() or "information" in result["answer"].lower()
+
+    def test_whitespace_question(self, vector_store, llm):
+        result = ask_question(vector_store, llm, "   ")
+        assert result["sources"] == []
+
